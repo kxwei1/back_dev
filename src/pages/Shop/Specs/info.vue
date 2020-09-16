@@ -33,7 +33,7 @@
 </template>
 <script>
 // 导入  添加和修改的 请求封装方法！
-import { addUser, editUser } from "@/request/user";
+import { addSpecs, editSpecs } from "@/request/specs";
 import { mapGetters, mapActions } from "vuex";
 let defaultItem = {
   specsname: "",
@@ -95,9 +95,9 @@ export default {
           let res;
           if (this.info.isAdd) {
             // 添加还是修改！
-            res = await addUser(this.forminfo);
+            res = await addSpecs(this.forminfo);
           } else {
-            res = await editUser(this.forminfo);
+            res = await editSpecs(this.forminfo);
           }
           if (res.code == 200) {
             this.$message.success(res.msg);

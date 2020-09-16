@@ -1,6 +1,6 @@
 <template>
   <div class="table-bg">
-    <el-table :data="specslist" row-key="id" :tree-props="{children: 'children'}">
+    <el-table :data="specslist">
       <el-table-column prop="id" label="ID" width="120" align="center"></el-table-column>
       <el-table-column prop="specsname" label="规格名称" align="center"></el-table-column>
       <el-table-column label="规格值" align="center">
@@ -26,7 +26,7 @@
           <el-button
             type="danger"
             size="small"
-            @click="del(scope.row.uid)"
+            @click="del(scope.row.id)"
             circle
             icon="el-icon-delete"
           ></el-button>
@@ -34,11 +34,12 @@
       </el-table-column>
     </el-table>
     <el-pagination
+      background
       @size-change="set_size"
       @current-change="set_page"
       :current-page="page"
-      :page-sizes="[1, 2, 3, 4,5]"
-      :page-size="1"
+      :page-sizes="[1, 2, 3, 4]"
+      :page-size="size"
       layout="total, sizes, prev, pager, next, jumper"
       :total="total"
     ></el-pagination>
@@ -86,6 +87,7 @@ export default {
           let res = await delSpecs(id);
           if (res.code == 200) {
             this.$message.success(res.msg);
+            // 如果本页只有1条数据！且不是第1页！
             if (this.specslist.length == 1 && this.page != 1) {
               this.SET_PAGE(this.page - 1);
             }
