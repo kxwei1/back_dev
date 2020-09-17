@@ -10,6 +10,7 @@ import user from "./modules/user"
 import category from "./modules/category"
 import specs from "./modules/specs"
 import goods from "./modules/goods"
+import banner from "./modules/banner"
 
 let store = new Vuex.Store({
     state: {
@@ -26,7 +27,8 @@ let store = new Vuex.Store({
         user,
         specs,
         category,
-        goods
+        goods,
+        banner
     }
 })
 

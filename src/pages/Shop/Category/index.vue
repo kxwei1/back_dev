@@ -7,8 +7,8 @@
 </template>
 
 <script>
-import Info from "@/pages/Shop/Category/info";
-import List from "@/pages/Shop/Category/list";
+import Info from "./info";
+import List from "./list";
 export default {
   components: {
     Info,

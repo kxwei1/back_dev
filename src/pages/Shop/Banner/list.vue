@@ -1,17 +1,18 @@
 <template>
   <div class="table-bg">
-    <el-table :data="specslist">
-      <el-table-column prop="id" label="ID" width="120" align="center"></el-table-column>
-      <el-table-column prop="specsname" label="规格名称" align="center"></el-table-column>
-      <el-table-column label="规格值" align="center">
+    <el-table :data="bannerlist" row-key="id" :tree-props="{children: 'children'}">
+      <el-table-column prop="id" label="ID" align="center"></el-table-column>
+      <el-table-column prop="title" label="轮播名称" align="center"></el-table-column>
+      <el-table-column label="轮播图片">
         <template slot-scope="scope">
-          <el-tag v-for="(item,index) in scope.row.attrs" :key="index" type="success">{{item}}</el-tag>
+          <img style="width:80px" v-if="scope.row.img" :src="scope.row.img | pixImg" alt />
+          <span v-else>暂无图片</span>
         </template>
       </el-table-column>
       <el-table-column label="状态">
         <template slot-scope="scope">
           <el-tag type="success" v-if="scope.row.status==1">启用</el-tag>
-          <el-tag type="danger" v-if="scope.row.status==2">禁用</el-tag>
+          <el-tag type="warning" v-if="scope.row.status==2">禁用</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="修改">
@@ -36,44 +37,42 @@
   </div>
 </template>
 <script>
-import { mapGetters, mapActions, mapMutations } from "vuex";
-import { delSpecs } from "@/request/specs";
+import { mapGetters, mapActions } from "vuex";
+import { delBanner } from "@/request/banner";
 export default {
   data() {
     return {};
   },
   computed: {
     ...mapGetters({
-      specslist: "specs/specslist",
+      bannerlist: "banner/bannerlist",
     }),
   },
   mounted() {
-    if (!this.specslist.length) {
-      this.get_specs_list();
+    if (!this.bannerlist.length) {
+      this.get_banner_list();
     }
   },
   methods: {
     ...mapActions({
-      get_specs_list: "specs/get_specs_list",
+      get_banner_list: "banner/get_banner_list",
     }),
     edit(val) {
       this.$emit("edit", { ...val });
+      console.log(this.bannerlist);
     },
-    async del(id) {
+    del(id) {
       this.$confirm("确认删除吗?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
       })
         .then(async () => {
-          let res = await delSpecs(id);
+          let res = await delCate(id);
+
           if (res.code == 200) {
             this.$message.success(res.msg);
-            // 如果本页只有1条数据！且不是第1页！
-            if (this.specslist.length == 1 && this.page != 1) {
-              this.SET_PAGE(this.page - 1);
-            }
-            this.get_specs_list(); // 重新获取列表！
+            this.get_banner_list(); // 重新获取列表！
           } else {
             this.$message.error(res.msg);
           }
